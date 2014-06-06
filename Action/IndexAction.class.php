@@ -8,7 +8,8 @@
 class IndexAction extends Action {
     
     public function index() {
-        echo "this is IndexAction index";
+        //echo "this is IndexAction index";
+        renderView("Index","index");
     }
     
     public function m1()
