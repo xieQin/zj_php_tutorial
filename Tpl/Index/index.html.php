@@ -10,8 +10,8 @@
     <title>zj_php with bootstrap</title>
 
     <!-- Bootstrap core CSS -->
+    <link href="../../Public/css/bootstrap.css" rel="stylesheet">
     <link href="../../Public/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
 
     <script src="../../Public/js/bootstrap.js"></script>
@@ -79,7 +79,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../Public/js/jQuery.js"></script>
     <script src="../../Public/js/bootstrap.min.js"></script>
   </body>
 </html>
