@@ -1,0 +1,495 @@
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<h3>该文档要用浏览器查看源码方式阅读</h3>
+
+zj_php 是掌金PHP项目的简单框架, 目的是让掌金项目能夸SAE、BAE和其他云平台运行，并且方便本地开发和调试。
+zj_php 框架引用入口文件 zj_php.php。
+zj_php 应用采用单入口文件 index.php 访问。
+
+----------
+v1.016
+===========================
+版本修改说明：v1.016:
+1. 添加指定加载目录时，可以选择是否包含子目录（add_autoload_path方法）；
+===========================
+版本修改说明：v1.015:
+1. 增加列接口文档自动生成处理类：Lib/ApiDocHandler.class.php, 根据标准的PHP注释 "/** XXX */", 为自动文档
+===========================
+版本修改说明：v1.014:
+1. URL中，Action的首字母可以小写。
+===========================
+v1.013
+===========================
+版本修改说明：v1.013:
+1. 增加JS跨域访问设置（CORS）。
+
+===========================
+版本修改说明：v1.010:
+1. 增加了 $_QueryAction 和 $_QueryMethod 全局参数，可以取当前请求的控制器和方法。
+
+===========================
+v1.009
+===========================
+版本修改说明：v1.009:
+1. 增加列表分页功能( Function.inc.php/list_page 函数 )；
+
+===========================
+版本修改说明：v1.008:
+1. 增加了KVDB功能（Lib/MyKV.class.php），等同SAE的SaeKV功能，支持Sae、Bae和本地环境；
+
+===========================
+版本修改说明：v1.007:
+1. 增加了队列任务 TaskQueue 功能（Lib/MyTaskQueue.class.php），其中整合了SAE和的TaskQueue功能；
+2. 增加了文件处理类(Lib/FileHandler.class.php)；
+
+===========================
+版本修改说明：v1.006:
+1. 框架目录增加了 add-tools 问价夹，保存附带的工具和服务；
+2. 增加了上传文件( upload_file )功能；
+
+===========================
+版本修改说明：v1.005:
+1. 修改了会输出多余空白行问题；
+2. 增加了 View 功能；
+
+===========================
+版本修改说明：v1.004:
+1. 添加 DES.class.php 文件，增加 DES 功能；
+
+===========================
+版本修改说明：v1.003:
+1. MyModel.class.php 类增加 debugSql 功能；
+
+===========================
+版本修改说明：v1.002:
+1. 增加 Lib\MailHandler.class.php 类(发送邮件功能)；
+
+===========================
+版本修改说明：v1.001:
+1. 修改了MyModel.class.php中一些BUG；
+2. 删除了Function.inc.php 中 send_mail、sms_send 的方法。
+3. 修改为数据库连接在应用的配置文件设置；
+4. 增加 Lib\CURLHandler.class.php 类；
+5. 增加 Lib\SMSHandler.class.php 类；
+
+===========================
+
+
+>>> 目录结构：
+Common 公共文件目录
+Lib 核心基类库目录
+Extend 扩展（第三方）目录
+Resource 资源文件目录
+example 实例目录
+add-tools 附带的工具和服务目录
+
+说明：
+1. Lib 和 Extend 目录下的类使用时会自动加载。
+2. 自动加载的类文件命名要求是: Name.class.php 或 class.Name.php
+
+>>> 系统文件说明:
+Common\Common.inc.php   系统方法文件
+\Function.inc.php 有用函数文件
+\Config.inc.php   系统配置文件
+\Runtime.inc.php  系统运行文件
+
+Lib\Action.class.php    应用中Actoin基类
+\Chinese.class.php   编码转换类
+\MyCache.class.php   缓存操作类
+\MyDb.class.php      数据库操作类
+\MyModel.class.php   数据表Model操作类
+\CURLHanler.class.php curl操作类
+\SMSHandler.class.php 发短信类
+\MyTaskQueue.class.php 队列任务处理类
+\FileHandle.class.php 文件操作类
+
+>>> 框架应用入口文件：
+zj_php.php
+
+>>> 创建项目：
+1. 拷贝 zj_php 架构包到合适位置；
+2. 任意地方建立项目目录“App1”;
+3. App1目录下建立项目单入口文件 index.php;
+4. 如下代码拷贝到 index.php文件中：
+<?php
+//应用zj_php框架
+require_once '../../zj_php.php';
+
+//设置应用路径
+setC("APP_PATH", dirname(__FILE__));
+
+//添加应用自动加载类路径
+add_autoload_path(getC("APP_PATH")."/Action/");
+
+//添加应用配置文件
+add_app_config(getC("APP_PATH")."/Conf/App1_Conf.php");
+
+//执行请求
+Runtime::doQuery();
+?>
+5. 在App1目录下创建控制器目录“Action”;
+6. 在Action目录下建 IndexAction.class.php 文件，并拷贝如下代码到该文件中：
+<?php
+class IndexAction extends Action {
+public function index() {
+echo "this is IndexAction index";
+}
+public function m2() {
+echo "this is IndexAction m2";
+}
+}
+?>
+7. 根据需要创建应用的其他目录，如：Business、Conf、Html、Public等。
+[应用创建完毕]
+
+可以通过以下访问应用：
+http://xxx/App1/index.php/
+http://xxx/App1/index.php/Index
+http://xxx/App1/index.php/Index/m2
+
+>>> 控制器(Action)说明：
+1. 建议将Action目录设置为自动加载目录；
+2. 所有的Action类要求继承 “Action基类(zj_php/Lib/Action.class.php)”；
+3. 控制器命名规法为 {Name}Action.class.php;
+4. 根据需要可以重写Action基类中的 __before, __after等方法；
+5. AppUrl/index.php/Aaa/bb 是请求控制器“AaaAction”的方法“bb”;
+6. 可以在App目录下创建文件 .htaccess (Apache目录配置文件)，并用以下代码隐藏请求Url中入口文件 index.php：
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+</IfModule>
+
+>>> 请求参数说明：
+1. 完整Get请求格式为：  AppUrl/Action/method/?p1=111&p2=222
+2. method中，可以用原PHP的 $_GET,$_POST,$_COOKIE，$_REQUEST等获取请求数据；
+3. zj_php 将 $_REQUEST 中数据预定义成 $q_{xxx} 形式的的全局变量（注意$_REQUEST中 POST，GET等数据的优先级），如：
+<?php
+//请求URL： AppUrl/Aaa/bb/?p1=111&p2=222
+class AaaAction extends Action {
+public function bb() {
+global $q_p1, $q_p2;
+echo "{$q_p1} ===== {$q_p2}";
+}
+}
+?>
+
+>>> 配置文件：
+1. zj_php的配置文件 Common/Common.inc.php, 用全局变量 $zj_config 保存配置信息；
+2. 可以用 setC($key, $value), getC($key)方法快捷 set 和 get 指定 key的配置信息；
+3. 在入口文件 index.php 中可以用 add_app_config($app_config_file)添加应用的配置信息，应用的配置信息同样可以用setC、getC操作;
+4. 应用的配置文件内容要求是以下格式：
+<?php
+return array(
+"c1" => 1234,
+"c2" => array("11","22"),
+);
+?>
+5. 修改 SERVER_PLAT 可以指定系统运行在哪个平台上(OWN|SAE|BAE); 
+6. 修改 DB_HOST、DB_USER、DB_PWD、DB_NAME 可以配置Mysql数据连接信息；
+7. 修改 MEMCACHE_SERVER 、 MEMCACHE_PORT 可以配置 Memcache 的连接信息；
+
+>>> 数据库操作（Lib/MyDb.class.php 封装类）:
+1. MyDb用query方法统一操作数据库，query直接执行sql语句；
+2. 如果是查询，query返回SELECT查询结果；
+3. 如果是修该表，query返回操作影响记录条数（和插入记录的主键值（需是自增）），格式为：
+<?php
+array("af"=>1, "id"=>100);
+?>
+4. MyDb中还提供了以下快捷查询（select）操作方法 query_array、query_one、query_int, 详见实例。   
+5. 为防止 sql 注入，要求接收的信息不能直接拼装sql语句，要用 ? 的参数形式;
+实例：
+<?php
+//创建数据库操作实例：
+$db = D();
+
+//条件查找1
+$sql1 = "SELECT * FROM t_test2 ";
+my_log($db->query($sql1));
+
+//条件查找2
+$sql2 = "SELECT * FROM t_test2 where id = ? or id = ? ";
+my_log($db->query($sql2, array("1", "3")));
+
+//插入
+$time = time();
+$sql3 = " INSERT INTO t_test1 (`uname`,`uaddress`) VALUES('$time', '$time') ";
+my_log($db->query($sql3));
+
+//删除
+$sql4 = " delete from t_test1 where idss = ? ";
+my_log($db->query($sql4, array(1)));
+
+//快捷查询，返回结果数组列表
+$sql5 = "SELECT * FROM t_test2 ";
+my_log($db->query_array($sql5));
+
+//快捷查询，只返回一条查询结果
+$sql6 = "SELECT * FROM t_test2 where id=1 ";
+my_log($db->query_one($sql6));
+
+//快捷查询，返回查询的数字
+$sql7 = "select count(*) from t_test2 where id = 10000";
+my_log($db->query_int($sql7));
+?>
+
+>>> 用数据Model操作数据表 (Lib/MyModel.class.php 封装类):
+1. 可以MyModel直接操作数据表；
+2. 除 add 外，select,find,update,delete 等方法，建议明确指定where条件，否则操作采用最后一次指定的where条件；
+实例：
+<?php
+
+//创建Model实例
+$m = M("t_test1");
+
+// 添加
+$time = time();
+$data = array("uname"=>"$time", "uaddress"=>"$time");
+my_log($m->add($data));
+
+//简单查询
+$arr = $m->where("1=1")->select();
+my_log($arr);
+
+//复杂查询
+$arr = $m->where(" idss=? or idss=? ", array(2,3))->order(" idss desc ")->limit(" 1,1 ")->select(" idss,uname ");
+my_log($arr);
+
+//只返回一条查询结果
+$arr = $m->where("1=1")->find();
+my_log($arr);
+
+//修改
+$data = array('uname' => "uuuuuuuuuuu");
+$get = $m->where("idss=2")->update($data);
+my_log($get);
+
+//删除
+$get = $m->where("idss=2")->delete();
+my_log($get);  
+
+//debug sql
+$time = time();
+$m->debugSql = true;
+$data = array("uname" => "$time", "uaddress" => "12345");
+my_log($m->add($data));
+?>
+
+>>> Memcache操作（Lib/MyCache.class.php 封装类）：
+1. MyCache 封装了SAE、BAE 等多平台操作 Memcache 的方法，可在配置中指定平台。
+2. 设置Cache数据用两个方法：set 和 set2。
+区别是：set 设置数据参数是地址传递，要求是个变量；set2 参数是值传递。推荐用 set 方法。
+3. 过期时间为相对当前时间的"秒"数 或是 某个时间的时间戳(秒);
+
+实例：
+<?php
+
+//创建操作实例
+$mem = MC();
+
+//set方法
+$arr1 = array("arr111");
+$mem->set("k1", $arr1);
+my_log($mem->get("k1"));
+
+//set2方法, 5秒后过期
+$mem->set2("k2", "2222", 5);
+my_log($mem->get("k2"));
+$mem->delete("k2");
+
+//删除
+$mem->delete("k1");
+my_log($mem->get("k1"));
+?>
+
+>>> 应用分组
+1. zj_php 不直接支持分组，可以在同级目录下建多个应用变相实现分组。
+
+>>> 发送短信：
+1. SMSHandler.class.php 发动短信类；
+2. 要求在应用的配置文件中配置 SMS_KEY、SMS_SUCRET 属性；
+实例：
+<?
+my_log(SMSHandler::share()->send("13816907782","掌金测试"));
+?>
+>>> 发送邮件：
+1. MailHandler.class.php 发用邮件类；
+2. 应用的配置文件中配置: SMTP_SERVER、SMTP_PORT、SMTP_USER、SMTP_PASS、SMTP_FROMMAIL 属性；
+实例：
+<?php
+$smtpemailto = "pengxl@zsgjs.com"; //发送给谁
+$mailsubject = "Test Subject"; //邮件主题
+$mailbody = "<h1>This is a test mail</h1>"; //邮件内容
+$mailtype = "HTML"; //邮件格式（HTML/TXT）,TXT为文本邮件
+
+$smtp = new MailHandler(true); //这里面的一个true是表示使用身份验证,否则不使用身份验证.
+echo $smtp->sendmail($smtpemailto, $mailsubject, $mailbody, $mailtype);
+?>
+
+>>> DES 功能：
+1. DES.class.php DES操作类, Common.inc.php 定义了快捷函数 DES($osTag)；
+2. 目前支持的匹配DES算法有 ios , android 和 debug。其中debug是不对加解密字符串进行操作；
+3. 为了便于URL网络传输，这里的DES加密后会将 '/'转换成‘@@’，解密前会将‘@@’替换成‘/’。
+
+实例：
+<?php
+$des = DES("android");
+$ec = $des->encode("abc中国", "12345678");
+my_log($ec);
+my_log($des->decode($ec, "12345678"));
+
+//debug
+$des = DES("android", true);
+$ec = $des->encode("abc中国", "12345678");
+my_log($ec);
+my_log($des->decode($ec, "12345678"));
+?>
+
+>>> View功能：
+1. View 即 MVC 中的 V 功能；
+2. 在APP入口文件(index.php)可以设置保存View的保证路径（"TPL_PATH"）；
+3. 在APP入口文件(index.php)可以设置APP的URL（APP_URL）和 URL中Action的标记（APP_URL_ACTIONTAG）；
+如：
+<?php
+//设置应用路径
+setC("APP_PATH", dirname(__FILE__));
+setC("TPL_PATH", getC("APP_PATH")."/Tpl/");
+//设置 APP URL
+$arr1 = explode("index.php", $_SERVER["SCRIPT_NAME"]);
+setC("APP_URL", $arr1[0]);
+setC("APP_URL_ACTIONTAG", "");
+?>
+4. View的命名要求是 *.html.php 格式；
+5. Action或View中均可以用 renderView() 方法来显示一个view（或View模块）；
+6. renderView中的 vPath 是相对 TPL_PATH 的路径；
+7. View中用变量 $_viewData 接受传递过来的数据；
+8. 还有 renderString, renderJson 等方法可以处理响应数据。
+9. 在View中可以快捷函数 U() 生成指定路径的URL，快捷函数UA()生成指定ACTION路径的URL。
+
+例：
+Action 文件:
+<?php
+class IndexAction extends Action{
+public function m3()
+{
+//echo getC("TPL_PATH");
+$viewData["aa"] = "aaaa";
+$viewData["bb"] = "bbbb";
+
+renderView("Index", "m3", $viewData);
+}
+}
+?>
+
+View 文件 ( Tpl/Index/m3.html.php ):
+<!-------------------------------------------------------
+
+<?php renderView("Tag","head",$_viewData); ?>
+<p>m3 start</p>
+
+<div>
+<?php
+print_r($_viewData);
+echo "\n";
+echo appF1();
+echo "\n";
+?>
+</div>
+<div><a href=" <?= UA("Index/index") ?> "> index </a></div>
+<script type="text/javascript" src="<?= U("Public/app.js")  ?>"> </script>
+
+------------------------------------------------------->
+
+>>> 文件上传功能
+
+1. 该功能为中转上传文件，可以把文件服务器单独部署，且不直接面向对用户，从而更好地保障文件服务器的安全性。
+2. 用 add-tools/UploadService 部署文件处理服务器；
+3. 调用 Function.inc.php 中 upload_file 中转上传文件；
+4. 如果上传是图片会自动的生成大中小缩略图，详细查看 add-tools/UploadService 说明。
+
+例子(详见Demo: IndexAction/upload)：
+<?
+//中转上传到文件服务
+if (isset($_FILES['file'])) {
+$tArr = explode(".", $_FILES["file"]["name"]);
+$type = $tArr[count($tArr) - 1];
+
+$filename = $_FILES["file"]["tmp_name"];
+$handle = fopen($filename, "r");
+$data = fread($handle, filesize ($filename));
+fclose($handle);
+
+$server = getC("upload_server");
+$sign = getC("upload_sign");
+
+echo upload_file($server, $data, $type, $sign);
+}
+
+?>
+
+>>> 队列任务
+1. 队列任务以异步方式执行用户任务，同时整合了SAE和BAE平台上的TaskQueue（跨平台）。
+
+示例：
+<?php
+
+for ($n = 0; $n < 10; $n++) {
+$q = MyTaskQueue::getQueue("task_name");
+$arr = array("http://112.124.26.68/zsgjs2/trunk/Admin/A/Test/pxltest", "http://www.facebook.com");
+$q->addTask($arr);
+$q->push();
+}
+
+?>
+
+2. 可通过配置属性 SERVER_PLAT 指定平台。
+3. 如果运行在本地环境，通过不断的调用应用入口文件 http://xxx/index.php?doTaskQueue 执行队列任务。
+4. 如果运行在本地环境，可以通过启用add-tools/JobWSRunner工具来自动执行队列任务。
+
+>>> KVDB功能：
+1. KVDB处理类 Lib/MyKV.class.php，支持Sae、Bae和本地环境；
+2. KVDB的Sae平台是用SaeKV实现, Bae平台是平台支持的Redis实现，本地环境是用文件方式实现；
+3. 如果运行在Sae平台上，需开启应用的SaeKV功能；如果运行在 Bae 平台上需开启应用的Redis功能，并设置"BAE_FOR_MYKV_REDIS_NAME"配置项；
+4. 目前支持 set,get,delete 和 getAll 方法，其中bae平台支持getAll方法;
+5. 目前保存数字指定是数组、字符串、数字等基本类型数据。
+
+实例：
+<?php
+$kv = MyKV::getKV();
+my_log($kv);
+
+$v = $kv->set("abc", "1234");
+my_log($v);
+
+$v = $kv->get("abc");
+my_log($v);
+
+$v = $kv->delete("abc");
+my_log($v);
+
+for($n = 0; $n < 200; $n++)
+{
+$kv->set("key_$n", $n);
+}
+
+my_log($kv->getAll());
+?>
+
+>>> 列表分页：
+1. Function.inc.php/list_page 函数 ；
+2. 可以设置css的类属性.list_page来定制分页样式。
+实例：
+<?php
+$add_item = array("a"=>1,"b"=>2);
+echo list_page($q_page, 33444,10, array(),$add_item,"#abc");
+?>
+
+>>> 自动生成API接口文档：
+1. Lib/ApiDocHandler.class.php 处理类；
+2. 根据标准的PHP注释 "/** XXX */", 可以自动文档；
+3. 生成的接口文档，要做访问设置，不能肆意暴露在外网上，注意安全性。
+实例：
+<?php
+    $doc = ApiDocHandler::generateDoc(getC("APP_PATH")."/_Action/ApiAction.class.php");
+    echo $doc;
+?>
