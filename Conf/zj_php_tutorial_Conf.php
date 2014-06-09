@@ -4,8 +4,8 @@ return array(
     //本地数据库
     "DB_HOST" => "localhost",
     "DB_USER" => "root",
-    "DB_PWD" => "",
-    "DB_NAME" => "test2",
+    "DB_PWD" => "123456",
+    "DB_NAME" => "test",
 //    //SAE
 //    "DB_HOST" => SAE_MYSQL_HOST_M . ":" .SAE_MYSQL_PORT,
 //    "DB_USER" => SAE_MYSQL_USER,
@@ -21,7 +21,7 @@ return array(
     "SMS_SUCRET" => "4385856d676e468b099b375425d788ad575913b5",
     "ca" => array("11", "22"),
     
-    "upload_server" => "http://localhost/68_zj_php/trunk/zj_php/add-tools/UploadService/upload_service.php",
+    "upload_server" => "http://localhost/zj_php_tutorial/zj_php/add-tools/UploadService/upload_service.php",
     "upload_sign" => "WERGHJMOIJNBGHJLIM1234567890",
 
     //配置邮箱

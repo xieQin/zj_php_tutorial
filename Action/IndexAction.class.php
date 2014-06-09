@@ -26,6 +26,7 @@ class IndexAction extends Action {
         //echo getC("TPL_PATH");
         $viewData["aa"] = "aaaa";
         $viewData["bb"] = "bbbb";
+        $viewData["cc"] = "cccc";
 
         renderView("Index", "m3", $viewData);
     }

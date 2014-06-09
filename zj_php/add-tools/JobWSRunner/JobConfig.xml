@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ArrayOfJobRequestEntity>
+  <JobRequestEntity>
+    <JobName>TaskQueue Job</JobName>
+    <Url>http://localhost/68_zj_php/trunk/zj_php/example/test.php?doTaskQueue</Url>
+    <AtTime />
+    <ExceptTimes>
+      <Start />
+      <End />
+    </ExceptTimes>
+    <Interval>2000</Interval>
+    <RunType>RunAlways</RunType>
+  </JobRequestEntity>
+</ArrayOfJobRequestEntity>
+
+
+
