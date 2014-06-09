@@ -18,7 +18,7 @@ if (!isset($_REQUEST['sign']) || $_REQUEST['sign'] != 'WERGHJMOIJNBGHJLIM1234567
     die("sign_error");
 }
 
-define("SERVER_HOST", "http://localhost/68_zj_php/trunk/zj_php/add-tools/UploadService/");
+define("SERVER_HOST", "http://localhost/zj_php_tutorial/zj_php/add-tools/UploadService/");
 
 
 $fileData = $_REQUEST["file"];
